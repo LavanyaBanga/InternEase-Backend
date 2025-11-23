@@ -87,7 +87,7 @@ try {
 app.use((req, res) => {
   res.status(404).json({ 
     success: false, 
-    message: Route ${req.url} not found 
+    message: `Route ${req.url} not found`
   });
 });
 
@@ -100,9 +100,10 @@ const PORT = process.env.PORT || 5000;
 
 if (process.env.VERCEL !== '1') {
   app.listen(PORT, () => {
-    console.log(Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT});
+    console.log(`Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
   });
 }
+
 
 
 module.exports = app;
