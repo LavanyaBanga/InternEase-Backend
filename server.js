@@ -16,8 +16,8 @@ connectDB().catch(err => console.log('DB connection failed:', err.message));
 
 
 app.use(cors({
-  origin:true,
-  credentials: *,
+  origin:*,
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
