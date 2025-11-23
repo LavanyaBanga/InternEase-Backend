@@ -6,46 +6,49 @@ const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middlewares/errorMiddleware');
 
-// Load environment variables from .env file
 dotenv.config();
 
-// --- DATABASE CONNECTION ---
-// Connect to the MongoDB database
 connectDB();
 
 const app = express();
 
-// --- CORE MIDDLEWARES ---
-// Set security-related HTTP headers
 app.use(helmet());
 
-// Configure CORS to allow requests from your frontend
-// BEST PRACTICE: Place all core middleware before defining routes.
+// CORS configuration for frontend
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  process.env.FRONTEND_URL // Add your Vercel frontend URL in environment variables
+].filter(Boolean);
+
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174"], // Support both frontend ports
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.some(allowed => origin.includes(allowed))) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
-// Body Parser Middleware to handle JSON and URL-encoded data
-// This allows you to access `req.body` in your route handlers.
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Request logger middleware - log all incoming requests
 app.use((req, res, next) => {
-  console.log(`📨 ${req.method} ${req.path}`);
+  console.log(📨 ${req.method} ${req.path});
   if (req.body && Object.keys(req.body).length > 0) {
     console.log('Body:', JSON.stringify(req.body).substring(0, 100));
   }
   next();
 });
 
-// Serve static files from uploads directory
 app.use('/uploads', express.static('uploads'));
 
 
-// --- API ROUTES ---
-// All your application's routes should be defined here.
 app.get("/", (req, res) => {
   res.send("InternEase Backend is running!");
 });
@@ -54,7 +57,6 @@ app.get("/api/test", (req, res) => {
   res.json({ message: "Hello from the backend!" });
 });
 
-// Health check endpoint
 app.get("/api/health", (req, res) => {
   const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
   res.json({ 
@@ -77,15 +79,17 @@ app.use('/api/notes', require('./routes/noteRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
 
 
-// --- ERROR HANDLING MIDDLEWARE ---
-// CRITICAL: This must be the LAST middleware loaded.
-// It catches any errors that occur in the routes above.
 app.use(errorHandler);
 
 
-// --- SERVER INITIALIZATION ---
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-});
+
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT});
+  });
+}
+
+// Export for Vercel
+module.exports = app;
