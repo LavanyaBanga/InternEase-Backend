@@ -1,4 +1,4 @@
-// Script to fix company names in opportunities
+
 require('dotenv').config();
 const mongoose = require('mongoose');
 const Opportunity = require('./models/Opportunity');
@@ -7,7 +7,7 @@ const User = require('./models/User');
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅ MongoDB Connected');
+    console.log(' MongoDB Connected');
   } catch (error) {
     console.error('MongoDB connection error:', error);
     process.exit(1);
@@ -31,16 +31,16 @@ const fixCompanyNames = async () => {
     console.log(`Current company: "${opp.company}"`);
     console.log(`Organizer name: "${opp.organizer?.name}"`);
 
-    // Check if company name is same as organizer name (likely a mistake)
+  
     if (opp.company === opp.organizer?.name) {
-      console.log('⚠️  Company name matches organizer name - this needs to be fixed manually');
+      console.log('  Company name matches organizer name - this needs to be fixed manually');
       console.log('   Please provide a proper company name for this internship');
       console.log(`   ID: ${opp._id}`);
     } else if (!opp.company || opp.company.trim() === '') {
-      console.log('⚠️  Company name is empty');
+      console.log('  Company name is empty');
       console.log(`   ID: ${opp._id}`);
     } else {
-      console.log('✅ Company name looks good');
+      console.log('Company name looks good');
     }
   }
 
@@ -50,7 +50,7 @@ const fixCompanyNames = async () => {
   console.log(`db.opportunities.updateOne({_id: ObjectId("ID_HERE")}, {$set: {company: "Proper Company Name"}})`);
 
   await mongoose.connection.close();
-  console.log('\n✅ Database connection closed');
+  console.log('\n Database connection closed');
 };
 
 fixCompanyNames().catch(error => {

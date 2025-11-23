@@ -9,7 +9,7 @@ const User = require('./models/User');
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅ MongoDB Connected');
+    console.log(' MongoDB Connected');
   } catch (error) {
     console.error('MongoDB connection error:', error);
     process.exit(1);
@@ -21,17 +21,17 @@ const seedOpportunities = async () => {
   
   console.log('\n=== CLEANING OLD OPPORTUNITIES ===');
   await Opportunity.deleteMany({});
-  console.log('✅ Deleted all old opportunities');
+  console.log(' Deleted all old opportunities');
   
   console.log('\n=== FINDING ORGANIZER ===');
   const organizer = await User.findOne({ role: 'organizer' });
   
   if (!organizer) {
-    console.error('❌ No organizer found! Please create an organizer account first.');
+    console.error(' No organizer found! Please create an organizer account first.');
     process.exit(1);
   }
   
-  console.log('✅ Found organizer:', organizer.name, organizer.email);
+  console.log(' Found organizer:', organizer.name, organizer.email);
   
   console.log('\n=== CREATING TEST OPPORTUNITIES ===');
   
@@ -91,7 +91,7 @@ const seedOpportunities = async () => {
   
   for (const oppData of opportunities) {
     const opportunity = await Opportunity.create(oppData);
-    console.log(`✅ Created: ${opportunity.title} at ${opportunity.company}`);
+    console.log(` Created: ${opportunity.title} at ${opportunity.company}`);
   }
   
   console.log('\n=== VERIFICATION ===');
@@ -107,7 +107,7 @@ const seedOpportunities = async () => {
     console.log(`   Stipend: ${opp.stipend}`);
   });
   
-  console.log('\n✅ SEEDING COMPLETE!');
+  console.log('\n SEEDING COMPLETE!');
   process.exit(0);
 };
 

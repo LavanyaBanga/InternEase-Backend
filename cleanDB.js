@@ -6,7 +6,7 @@ dotenv.config();
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅ MongoDB Connected');
+    console.log(' MongoDB Connected');
   } catch (error) {
     console.error('MongoDB connection error:', error);
     process.exit(1);
@@ -21,7 +21,7 @@ const cleanDB = async () => {
   
   console.log('\n=== DELETING CORRUPTED RECORDS ===');
   
-  // Delete records where company is undefined/null
+  
   const result = await collection.deleteMany({ 
     $or: [
       { company: { $exists: false } },
@@ -30,7 +30,7 @@ const cleanDB = async () => {
     ]
   });
   
-  console.log(`✅ Deleted ${result.deletedCount} corrupted records`);
+  console.log(` Deleted ${result.deletedCount} corrupted records`);
   
   const remaining = await collection.countDocuments();
   console.log(`Remaining records: ${remaining}`);

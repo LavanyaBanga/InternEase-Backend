@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 mongoose.connect(process.env.MONGO_URI).then(async () => {
-  console.log('✅ Connected to MongoDB\n');
+  console.log(' Connected to MongoDB\n');
   
   const db = mongoose.connection.db;
   const users = await db.collection('users').find({}).toArray();

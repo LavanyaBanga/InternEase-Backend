@@ -8,7 +8,7 @@ const Opportunity = require('./models/Opportunity');
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅ MongoDB Connected');
+    console.log(' MongoDB Connected');
   } catch (error) {
     console.error('MongoDB connection error:', error);
     process.exit(1);
@@ -21,7 +21,7 @@ const checkOpportunities = async () => {
   console.log('\n=== CHECKING OPPORTUNITIES ===');
   
   try {
-    // Use direct MongoDB query to bypass any model issues
+    
     const db = mongoose.connection.db;
     const collection = db.collection('opportunities');
     

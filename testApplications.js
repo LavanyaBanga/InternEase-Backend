@@ -1,4 +1,4 @@
-// Test script to check applications in database
+
 require('dotenv').config();
 const mongoose = require('mongoose');
 const Application = require('./models/Application');

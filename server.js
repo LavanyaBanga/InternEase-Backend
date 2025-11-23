@@ -5,19 +5,16 @@ const helmet = require('helmet');
 const mongoose = require('mongoose');
 const { errorHandler } = require('./middlewares/errorMiddleware');
 
-// Load environment variables first
+
 dotenv.config();
 
 const app = express();
 
-// Connect to database (non-blocking for serverless)
+
 const connectDB = require('./config/db');
 connectDB().catch(err => console.log('DB connection failed:', err.message));
 
-// Disable helmet for serverless (can cause issues)
-// app.use(helmet());
 
-// CORS configuration - Allow all origins for Vercel deployment
 app.use(cors({
   origin: true,
   credentials: true,
@@ -28,14 +25,13 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Simplified logging for serverless
+
 app.use((req, res, next) => {
   console.log(${req.method} ${req.path});
   next();
 });
 
-// Static files (might not work in serverless)
-// app.use('/uploads', express.static('uploads'));
+
 
 
 app.get("/", (req, res) => {
@@ -70,7 +66,7 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// API Routes with error handling
+
 try {
   app.use('/api/auth', require('./routes/authRoutes'));
   app.use('/api/opportunities', require('./routes/opportunityRoutes'));
@@ -86,7 +82,7 @@ try {
   console.error('Error loading routes:', error.message);
 }
 
-// 404 handler
+
 app.use((req, res) => {
   res.status(404).json({ 
     success: false, 
@@ -94,18 +90,18 @@ app.use((req, res) => {
   });
 });
 
-// Error handler (must be last)
+
 app.use(errorHandler);
 
 
 const PORT = process.env.PORT || 5000;
 
-// Start server only in development (not on Vercel)
+
 if (process.env.VERCEL !== '1') {
   app.listen(PORT, () => {
     console.log(Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT});
   });
 }
 
-// Export for Vercel serverless
+
 module.exports = app;

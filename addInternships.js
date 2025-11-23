@@ -6,7 +6,7 @@ dotenv.config();
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅ MongoDB Connected');
+    console.log(' MongoDB Connected');
   } catch (error) {
     console.error('MongoDB connection error:', error);
     process.exit(1);
@@ -20,15 +20,15 @@ const addProperInternships = async () => {
   const collection = db.collection('opportunities');
   const usersCollection = db.collection('users');
   
-  // Find an organizer
+  
   const organizer = await usersCollection.findOne({ role: 'organizer' });
   
   if (!organizer) {
-    console.error('❌ No organizer found!');
+    console.error(' No organizer found!');
     process.exit(1);
   }
   
-  console.log('✅ Found organizer:', organizer.name);
+  console.log(' Found organizer:', organizer.name);
   
   const internships = [
     {
@@ -99,11 +99,11 @@ const addProperInternships = async () => {
   console.log('\n=== ADDING INTERNSHIPS ===');
   for (const intern of internships) {
     await collection.insertOne(intern);
-    console.log(`✅ Added: ${intern.title} at ${intern.company}`);
+    console.log(` Added: ${intern.title} at ${intern.company}`);
   }
   
   const total = await collection.countDocuments();
-  console.log(`\n✅ Total internships in DB: ${total}`);
+  console.log(`\n Total internships in DB: ${total}`);
   
   console.log('\n=== ALL INTERNSHIPS ===');
   const all = await collection.find({}).toArray();
